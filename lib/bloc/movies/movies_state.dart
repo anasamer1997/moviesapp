@@ -1,30 +1,30 @@
 part of 'movies_bloc.dart';
 
 @immutable
-abstract class NewsState {}
+abstract class MoviesState {}
 
-class MoviesInitial extends NewsState {}
+class MoviesInitial extends MoviesState {}
 
-class MoviesPageLoading extends NewsState {}
+class MoviesPageLoading extends MoviesState {}
 
-class MoviesPageLoadingMore extends NewsState {}
+class MoviesPageLoadingMore extends MoviesState {}
 
-class MoviesPageLoaded extends NewsState {
+class MoviesPageLoaded extends MoviesState {
   late final MoviesModel data;
   MoviesPageLoaded(this.data);
 }
 
-class MoviesPagingLoaded extends NewsState {
+class MoviesPagingLoaded extends MoviesState {
   late final MoviesModel data;
   MoviesPagingLoaded(this.data);
 }
 
-class MoviesMorePageLoaded extends NewsState {
+class MoviesMorePageLoaded extends MoviesState {
   late final MoviesModel data;
   MoviesMorePageLoaded(this.data);
 }
 
-class MoviesPageError extends NewsState {
+class MoviesPageError extends MoviesState {
   late final String errorMessage;
   MoviesPageError(this.errorMessage);
 }

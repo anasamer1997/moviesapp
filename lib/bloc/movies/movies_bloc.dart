@@ -8,7 +8,7 @@ import 'package:moviesapp/repository/movies/movies_repo_imp.dart';
 part 'movies_event.dart';
 part 'movies_state.dart';
 
-class MoviesBloc extends Bloc<MoviesEvent, NewsState> {
+class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
   final _newsRepo = MovieRepoImp();
   int page = 1;
   bool haveMoreData = false;
@@ -18,7 +18,7 @@ class MoviesBloc extends Bloc<MoviesEvent, NewsState> {
   }
 
   FutureOr<void> _fetchMoviesListPagination(
-      MoviesEvent event, Emitter<NewsState> emit) async {
+      MoviesEvent event, Emitter<MoviesState> emit) async {
     if (event is MoviesFetchDataPaginationEvent) {
       if (page == 1) {
         emit(MoviesPageLoadingMore());
@@ -33,7 +33,7 @@ class MoviesBloc extends Bloc<MoviesEvent, NewsState> {
           emit(MoviesMorePageLoaded(moviesList));
           page++;
         } else {
-          emit(MoviesPageError(moviesList.status_message!));
+          emit(MoviesPageError(moviesList.statusmessage!));
         }
       });
     }

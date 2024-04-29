@@ -1,3 +1,3 @@
 class ApiEndPoints {
-  final String getNewsList = "v2/top-headlines";
+  final String getMoviesList = "trending/movie/";
 }

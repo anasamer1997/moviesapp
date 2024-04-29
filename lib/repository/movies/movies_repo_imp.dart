@@ -5,13 +5,11 @@ import 'movies_repo.dart';
 
 class MovieRepoImp extends NewsRepo {
   final BaseApiService _apiService = NetworkApiService();
-  static const int _pageSize = 10;
-
   @override
-  Future getMoviesPaginationData(String newsType, int page) async {
+  Future getMoviesPaginationData(String moviesType, int page) async {
     try {
       dynamic response = await _apiService.getPopularMoviesPaginationResponse(
-          ApiEndPoints().getNewsList, _pageSize, page);
+          ApiEndPoints().getMoviesList, moviesType, page);
       return response;
     } catch (e) {
       rethrow;

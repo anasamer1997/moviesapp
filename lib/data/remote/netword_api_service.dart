@@ -2,16 +2,19 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:moviesapp/data/model/Movies/movies_model.dart';
 import '../../data/remote/app_exception.dart';
 import '../../data/remote/base_api_service.dart';
 
 class NetworkApiService extends BaseApiService {
   final dio = Dio();
 
-  dynamic returnResponse(Response response) {
+  MoviesModel returnResponse(Response response) {
     switch (response.statusCode) {
       case 200:
-        dynamic responseJson = jsonDecode(response.data);
+        print(response.data);
+        final responseJson = MoviesModel.fromJson(response.data);
+
         return responseJson;
       case 400:
         throw BadRequestException(response.toString());
@@ -29,15 +32,12 @@ class NetworkApiService extends BaseApiService {
 
   @override
   Future getPopularMoviesPaginationResponse(
-      String url, int pageSize, int page) async {
-    dynamic responseJson;
+      String url, String moviesType, int page) async {
+    MoviesModel responseJson;
     try {
-      var query = {
-        "apiKey": apiKey,
-        "pageSize": pageSize.toString(),
-        "page": page.toString()
-      };
-      final response = await dio.get(baseUrl + url, queryParameters: query);
+      var query = {"api_key": apiKey, "page": page.toString()};
+      final response =
+          await dio.get(baseUrl + moviesType, queryParameters: query);
       responseJson = returnResponse(response);
     } catch (e) {
       if (e is AppException) {
