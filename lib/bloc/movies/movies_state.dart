@@ -19,11 +19,6 @@ class MoviesPagingLoaded extends MoviesState {
   MoviesPagingLoaded(this.data);
 }
 
-class MoviesMorePageLoaded extends MoviesState {
-  late final MoviesModel data;
-  MoviesMorePageLoaded(this.data);
-}
-
 class MoviesPageError extends MoviesState {
   late final String errorMessage;
   MoviesPageError(this.errorMessage);

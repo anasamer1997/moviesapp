@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moviesapp/bloc/movies/movies_bloc.dart';
 import 'package:moviesapp/data/model/Movies/movies_model.dart';
+import 'package:moviesapp/screen/movie_detailes_screen.dart';
 
 class MoviesListPaginationScreen extends StatefulWidget {
   static const String id = "movies_list_pagination_screen";
@@ -17,7 +18,7 @@ class _MoviesListPaginationScreenState
     extends State<MoviesListPaginationScreen> {
   late MoviesBloc _moviesBloc;
   String moviesType = "day";
-  final List<Result> _moviesList = [];
+  List<Result> _moviesList = [];
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -37,27 +38,52 @@ class _MoviesListPaginationScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Movies"),
-        ),
-        body: BlocBuilder<MoviesBloc, MoviesState>(
-          bloc: _moviesBloc,
-          builder: (context, state) {
-            if (state is MoviesPageLoadingMore) {
-              return const CircularProgressIndicator();
-            } else if (state is MoviesPageError) {
-              return Text(state.errorMessage);
-            } else if (state is MoviesMorePageLoaded) {
-              _moviesList.addAll(state.data.results);
-              if (_moviesList.length >= state.data.totalResults) {
-                _moviesBloc.haveMoreData = false;
-              } else {
-                _moviesBloc.haveMoreData = true;
+      appBar: AppBar(
+        title: const Text("Movies"),
+      ),
+      body: BlocBuilder<MoviesBloc, MoviesState>(
+        bloc: _moviesBloc,
+        builder: (context, state) {
+          if (state is MoviesPageLoadingMore) {
+            _moviesList = [];
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is MoviesPageError) {
+            return Text(state.errorMessage);
+          } else if (state is MoviesPagingLoaded) {
+            _moviesList.addAll(state.data.results);
+          }
+          return _moviesistView();
+        },
+      ),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            onPressed: () {
+              if (_moviesBloc.page > 1) {
+                _moviesBloc.page -= 1;
+                _moviesBloc.add(MoviesFetchDataPaginationEvent(moviesType));
               }
-            }
-            return _moviesistView();
-          },
-        ));
+            },
+            heroTag: null,
+            tooltip: "previous",
+            child: const Icon(Icons.arrow_left),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          FloatingActionButton(
+            onPressed: () {
+              _moviesBloc.page += 1;
+              _moviesBloc.add(MoviesFetchDataPaginationEvent(moviesType));
+            },
+            heroTag: null,
+            tooltip: "next",
+            child: const Icon(Icons.arrow_right),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _moviesistView() {
@@ -88,14 +114,15 @@ class _MoviesListPaginationScreenState
   Widget _moviesListItems(Result movie, int index) {
     return Card(
       child: ListTile(
-        leading: const CircleAvatar(),
         title: Text(
           movie.title,
         ),
-        subtitle: Text(movie.originalName),
+        subtitle: Text(movie.mediaType),
+        trailing: Text(movie.releaseDate),
         onTap: () {
-          // Navigator.of(context, rootNavigator: true)
-          //     .pushNamed(NewsDetailScreen.id, arguments: article);
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => MovieDetailesScreen(movie: movie),
+          ));
         },
       ),
     );

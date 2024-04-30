@@ -12,7 +12,6 @@ class NetworkApiService extends BaseApiService {
   MoviesModel returnResponse(Response response) {
     switch (response.statusCode) {
       case 200:
-        print(response.data);
         final responseJson = MoviesModel.fromJson(response.data);
 
         return responseJson;

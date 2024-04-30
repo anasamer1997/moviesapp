@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 import 'package:moviesapp/bloc/movies/movies_bloc.dart';
+import 'package:moviesapp/data/model/result_adapter.dart';
 import 'package:moviesapp/screen/news_list_pagination_screen.dart';
+import 'package:path_provider/path_provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final appDocumentDir = await getApplicationDocumentsDirectory();
+  Hive.init(appDocumentDir.path);
+  Hive.init(appDocumentDir.path);
+  Hive.registerAdapter(ApiResponseAdapter());
+
   runApp(const MyApp());
 }
 
